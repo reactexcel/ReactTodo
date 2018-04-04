@@ -10,7 +10,8 @@ export default class App extends React.Component {
       toDoList: [
         {id: 0, name: 'vikas', checked: true}, 
         {id: 1, name: 'nitesh', checked: false}
-      ]                                           // hard coded json data
+      ],                                           // hard coded json data
+      error: false
     };
   }
   toggle(itemToBeDeleted, Case){
@@ -23,12 +24,18 @@ export default class App extends React.Component {
   }
   handleSubmit(event){
     event.preventDefault();
-    const { toDoName, toDoList } = this.state;
-    const newToDoList = toDoList;
-    newToDoList.push({id: toDoList.length, name: toDoName, checked: false});
-    this.setState({toDoName:'', toDoList: newToDoList});
+    const { toDoName, toDoList, error } = this.state;
+    if(toDoName == ''){
+      this.setState({error: true})
+    } else{
+      const newToDoList = toDoList;
+      newToDoList.push({id: toDoList.length, name: toDoName, checked: false});
+      this.setState({toDoName:'', toDoList: newToDoList, error: false});
+    }
   }
   render() {
+    const { error } = this.state;
+    let border = error ? '1px solid rgba(255,0,0,.5)' : '1px solid rgba(0,0,0,.1)';
     return (
       <div className='container'>
         <div className='row'>
@@ -42,12 +49,13 @@ export default class App extends React.Component {
           <h5 className='col-xs-12' style={{'padding': '1em 0 0 .5em'}}>Todo</h5>
           <form className='col-xs-12' onSubmit={this.handleSubmit.bind(this)}>
             <input
-              style={{'display': 'block', 'outline': 'none', 'border': '1px solid rgba(0,0,0,.1)', 'borderRadius': '2px', 'width': '700px', 'padding': '3px 5px' }}
+              style={{'display': 'block', 'outline': 'none', 'border': border, 'borderRadius': '2px', 'width': '700px', 'padding': '3px 5px' }}
               onChange={(e) => this.setState({toDoName: e.target.value})}
               value={this.state.toDoName}
+              className={error ? 'text-danger' : null}
               />
             <button
-              style={{'display': 'block', 'outline': 'none', 'border': '1px solid rgba(0,0,0,.1)', 'borderRadius': '4px', 'marginTop': '10px', 'background': '#fff'}}
+              style={{'display': 'block', 'outline': 'none', 'border': border, 'borderRadius': '4px', 'marginTop': '10px', 'background': '#fff'}}
             > submit </button>
           </form>
         </div>
