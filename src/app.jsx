@@ -1,8 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
+import {withRouter} from 'react-router';
+import { connect } from 'react-redux';
+import { changeName } from './redux/actions';
 import Displaylist from './Displaylist';
 
-export default class App extends React.Component {
+class App extends React.Component {
   constructor(){
     super();
     this.state={
@@ -66,3 +69,17 @@ export default class App extends React.Component {
     )
   }
 }
+
+export function mapStateToProps(state) {
+  return {
+    name: state
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    onNameChange: (e) => dispatch(changeName(e.target.value))
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
