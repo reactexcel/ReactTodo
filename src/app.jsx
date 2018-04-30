@@ -9,7 +9,6 @@ class App extends React.Component {
   constructor(){
     super();
     this.state={
-      toDoName: '',
       toDoList: [
         {id: 0, name: 'vikas', checked: true}, 
         {id: 1, name: 'nitesh', checked: false}
@@ -19,7 +18,6 @@ class App extends React.Component {
     };
   }
   toggle(itemToBeDeleted, Case){
-    console.log(this.state.toDoList, itemToBeDeleted, Case);
     if(Case === 'check'){
       
     } else if(Case === 'delete'){
@@ -28,16 +26,19 @@ class App extends React.Component {
   }
   handleSubmit(event){
     event.preventDefault();
-    const { toDoName, toDoList, error } = this.state;
-    if(toDoName == ''){
+    const { toDoList, error } = this.state;
+    const { home, onNameChange } = this.props;
+    if(home.list == ''){
       this.setState({error: true})
     } else{
       const newToDoList = toDoList;
-      newToDoList.push({id: toDoList.length, name: toDoName, checked: false});
-      this.setState({toDoName:'', toDoList: newToDoList, error: false});
+      newToDoList.push({id: toDoList.length, name: home.list, checked: false});
+      onNameChange('');
+      this.setState({toDoList: newToDoList, error: false});
     }
   }
   render() {
+    const { home, onNameChange } = this.props;
     const { error, edit } = this.state;
     let border = error ? '1px solid rgba(255,0,0,.5)' : '1px solid rgba(0,0,0,.1)';
     return (
@@ -56,8 +57,8 @@ class App extends React.Component {
           <form className='col-xs-12' onSubmit={this.handleSubmit.bind(this)}>
             <input
               style={{'display': 'block', 'outline': 'none', 'border': border, 'borderRadius': '2px', 'width': '700px', 'padding': '3px 5px' }}
-              onChange={(e) => this.setState({toDoName: e.target.value})}
-              value={this.state.toDoName}
+              onChange={(e) => onNameChange(e.target.value)}
+              value={home.list}
               className={error ? 'text-danger' : null}
               />
             <button
@@ -72,13 +73,13 @@ class App extends React.Component {
 
 export function mapStateToProps(state) {
   return {
-    name: state
+    home: state.home
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onNameChange: (e) => dispatch(changeName(e.target.value))
+    onNameChange: (value) => dispatch(changeName(value))
   };
 }
 

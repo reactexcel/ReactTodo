@@ -1,12 +1,9 @@
 import { handleActions } from 'redux-actions';
 
 export const initialState = {
-  name: 'world'
+  list: ''
 };
 
-export const login = handleActions({
-  CHANGE_NAME: (state, action) => {
-    console.log(action, state, initialState, '========')
-    return({ name: action.payload });
-  }
+export const home = handleActions({
+  CHANGE_NAME: (state, action) => ({ list: action.payload })
 }, initialState);
